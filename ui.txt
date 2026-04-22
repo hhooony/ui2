@@ -1,0 +1,19 @@
+Use my ui.sh style: file loation ~/lib/ui.sh
+
+Functions:
+- ui::title
+- ui::section
+- ui::line
+- ui::field
+- ui::item
+- ui::info
+- ui::ok
+- ui::warn
+- ui::error
+- ui::pause
+
+Formatting:
+- colored output
+- aligned key/value (field)
+- section headers with ▶
+- clean CLI style

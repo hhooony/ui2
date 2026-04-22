@@ -1,0 +1,16 @@
+Use my ui2.sh style, file location  ~/lib/ui2.sh
+
+- ui::title # Title (dynamic width, bold blue, boxed)
+- ui::section # Section header (magenta, "#")
+- ui::line # Full width line (default "-")
+- ui::field # Key-value field display
+- ui::item # Bullet item
+- ui::info # Info message (ℹ)
+- ui::ok # Success message (✔)
+- ui::warn # Warning message (⚠)
+- ui::error # Error message (✖, stderr)
+- ui::pause  # enter # Pause (wait for Enter)
+- ui::indent # ui::indent "출력할 내용" (4 spaces)
+- ui::ask_confirm  # y or n # Confirm prompt (y/n, /dev/tty)
+- ui::table_row --header #COL1 COL2 COL3
+- ui::table_row #COL1 COL2 COL3
