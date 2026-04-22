@@ -15,18 +15,32 @@ ui::init_colors() {
     local ncolors
 
     if [[ -t 1 ]]; then
-        ncolors=$(tput colors 2>/dev/null || echo 0)
-        if [[ -n "$ncolors" && "$ncolors" -ge 8 ]]; then
-            C_RESET="$(tput sgr0)"
-            C_BOLD="$(tput bold)"
-            C_DIM="$(tput dim)"
-            C_RED="$(tput setaf 1)"
-            C_GREEN="$(tput setaf 2)"
-            C_YELLOW="$(tput setaf 3)"
-            C_BLUE="$(tput setaf 4)"
-            C_MAGENTA="$(tput setaf 5)"
-            C_CYAN="$(tput setaf 6)"
+        if command -v tput >/dev/null 2>&1; then
+            ncolors=$(tput colors 2>/dev/null || echo 0)
+            if [[ -n "$ncolors" && "$ncolors" -ge 8 ]]; then
+                C_RESET="$(tput sgr0)"
+                C_BOLD="$(tput bold)"
+                C_DIM="$(tput dim)"
+                C_RED="$(tput setaf 1)"
+                C_GREEN="$(tput setaf 2)"
+                C_YELLOW="$(tput setaf 3)"
+                C_BLUE="$(tput setaf 4)"
+                C_MAGENTA="$(tput setaf 5)"
+                C_CYAN="$(tput setaf 6)"
+                return
+            fi
         fi
+
+        # Fallback to hardcoded ANSI escape sequences if tput is unavailable
+        C_RESET=$'\033[0m'
+        C_BOLD=$'\033[1m'
+        C_DIM=$'\033[2m'
+        C_RED=$'\033[31m'
+        C_GREEN=$'\033[32m'
+        C_YELLOW=$'\033[33m'
+        C_BLUE=$'\033[34m'
+        C_MAGENTA=$'\033[35m'
+        C_CYAN=$'\033[36m'
     fi
 }
 
@@ -50,7 +64,7 @@ ui::line() {
     char="${1:--}"
 
     printf -v line '%*s' "$width" ''
-    printf '%s\n' "${line// /$char}"
+    printf '%b%s%b\n' "${C_DIM}${C_BLUE}" "${line// /$char}" "${C_RESET}"
 }
 
 # 텍스트 길이에 맞춘 가변 구분선 (내부용)
@@ -71,7 +85,8 @@ ui::title() {
 
     printf '\n%b' "${C_BOLD}${C_BLUE}"
     ui::_draw_line_by_text "$msg" "="
-    printf '%s\n' "$msg"
+    printf '%b%s\n' "${C_RESET}${C_GREEN}" "$msg"
+    printf '%b' "${C_BOLD}${C_BLUE}"
     ui::_draw_line_by_text "$msg" "="
     printf '%b' "${C_RESET}"
 }
