@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# 엄격한 모드(set -u)에서도 에러가 발생하지 않도록 전역 변수 초기화
+C_RESET=""
+C_BOLD=""
+C_DIM=""
+C_RED=""
+C_GREEN=""
+C_YELLOW=""
+C_BLUE=""
+C_MAGENTA=""
+C_CYAN=""
+
 ui::init_colors() {
     local ncolors
 
@@ -32,6 +43,10 @@ ui::line() {
     local line
 
     width=$(ui::_get_width)
+    if (( width > 80 )); then
+        width=80
+    fi
+
     char="${1:--}"
 
     printf -v line '%*s' "$width" ''
@@ -116,8 +131,25 @@ ui::error() {
     printf '%b %s\n' "${C_RED}[FAIL]${C_RESET}" "$*" >&2
 }
 
+ui::die() {
+    ui::error "$*"
+    exit 1
+}
+
+ui::debug() {
+    # DEBUG=1 또는 DEBUG=true 일 때만 stderr로 출력
+    if [[ "${DEBUG:-0}" == "1" || "${DEBUG:-}" == "true" ]]; then
+        printf '%b %s\n' "${C_DIM}[DEBUG]${C_RESET}" "$*" >&2
+    fi
+}
+
+# 주요 작업 단계 표시 (예: ==> 작업 시작)
+ui::step() {
+    printf '\n%b==>%b %b%s%b\n' "${C_BOLD}${C_BLUE}" "${C_RESET}" "${C_BOLD}" "$*" "${C_RESET}"
+}
+
 ui::field() {
-    printf '  %b%-20s%b %s\n' "${C_DIM}" "$1:" "${C_RESET}" "$2"
+    printf '  %b%-20s%b %s\n' "${C_DIM}" "$1:" "${C_RESET}" "${*:2}"
 }
 
 ui::item() {
@@ -142,8 +174,7 @@ ui::pause() {
 
 # 테이블 형식을 유연하게 (배열 사용 권장)
 ui::table_row() {
-    local format
-    format="%-24s %-16s %-20s\n"
+    local format="${UI_TABLE_FORMAT:-%-24s %-16s %-20s\n}"
 
     if [[ "$1" == "--header" ]]; then
         shift

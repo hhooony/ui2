@@ -1,16 +1,20 @@
 Use my ui2.sh style, file location  ~/lib/ui2.sh
+https://github.com/hhooony/ui2.git
 
 - ui::title # Title (dynamic width, bold blue, boxed)
-- ui::section # Section header (magenta, "#")
-- ui::line # Full width line (default "-")
+- ui::section # Section header (magenta, ">")
+- ui::line # 80 char long line (default "-")
 - ui::field # Key-value field display
 - ui::item # Bullet item
-- ui::info # Info message (ℹ)
-- ui::ok # Success message (✔)
-- ui::warn # Warning message (⚠)
-- ui::error # Error message (✖, stderr)
+- ui::info # Info message
+- ui::ok # Success message
+- ui::warn # Warning message
+- ui::error # Error message (stderr)
 - ui::pause  # enter # Pause (wait for Enter)
-- ui::indent # ui::indent "출력할 내용" (4 spaces)
+- ui::indent # ui::indent "출력할 내용" (4 spaces) printf '%s\n' "$*" | sed "s/^/$indent/"
 - ui::ask_confirm  # y or n # Confirm prompt (y/n, /dev/tty)
-- ui::table_row --header #COL1 COL2 COL3
-- ui::table_row #COL1 COL2 COL3
+- ui::table_row --header #format="${UI_TABLE_FORMAT:-%-24s %-16s %-20s\n}", export UI_TABLE_FORMAT
+- ui::table_row #format="${UI_TABLE_FORMAT:-%-24s %-16s %-20s\n}"
+- ui::die 
+- ui::debug # DEBUG=1 또는 DEBUG=true 일 때만 stderr로 출력
+- ui::step
