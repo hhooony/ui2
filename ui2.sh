@@ -162,6 +162,12 @@ ui::debug() {
 ui::step() {
     printf '\n%b==>%b %b%s%b\n' "${C_BOLD}${C_BLUE}" "${C_RESET}" "${C_BOLD}" "$*" "${C_RESET}"
 }
+ui::msgb() {
+    printf '%b%s%b\n' "${C_BLUE}" "$*" "${C_RESET}"
+}
+ui::msgc() {
+    printf '%b%s%b\n' "${C_BOLD}${C_CYAN}" "$*" "${C_RESET}"
+}
 
 ui::field() {
     printf '  %b%-20s%b %s\n' "${C_DIM}" "$1:" "${C_RESET}" "${*:2}"
