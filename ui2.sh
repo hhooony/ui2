@@ -57,8 +57,8 @@ ui::line() {
     local line
 
     width=$(ui::_get_width)
-    if (( width > 80 )); then
-        width=80
+    if (( width > 50 )); then
+        width=50
     fi
 
     char="${1:--}"
@@ -67,28 +67,29 @@ ui::line() {
     printf '%b%s%b\n' "${C_DIM}${C_BLUE}" "${line// /$char}" "${C_RESET}"
 }
 
-# 텍스트 길이에 맞춘 가변 구분선 (내부용)
-ui::_draw_line_by_text() {
-    local text="$1"
-    local char="${2:-=}"
-    local len
-    local line
-
-    len=${#text}
-    printf -v line '%*s' "$len" ''
-    printf '%s\n' "${line// /$char}"
-}
-
-# 개선된 Title (텍스트 길이에 맞춤)
+# 개선된 Title (기본 너비 50, 가운데 정렬)
 ui::title() {
-    local msg="  $1  "
+    local text="$1"
+    local width=50
+    local text_len=${#text}
 
-    printf '\n%b' "${C_BOLD}${C_BLUE}"
-    ui::_draw_line_by_text "$msg" "="
-    printf '%b%s\n' "${C_RESET}${C_GREEN}" "$msg"
-    printf '%b' "${C_BOLD}${C_BLUE}"
-    ui::_draw_line_by_text "$msg" "="
-    printf '%b' "${C_RESET}"
+    # 텍스트가 50자를 초과할 경우 너비 자동 확장
+    if (( text_len + 4 > width )); then
+        width=$(( text_len + 4 ))
+    fi
+
+    local pad_left=$(( (width - text_len) / 2 ))
+    local pad_right=$(( width - text_len - pad_left ))
+
+    local left_space right_space line
+    printf -v left_space '%*s' "$pad_left" ""
+    printf -v right_space '%*s' "$pad_right" ""
+    printf -v line '%*s' "$width" ""
+    line="${line// /=}"
+
+    printf '\n%b%s\n' "${C_BOLD}${C_BLUE}" "$line"
+    printf '%b%s%s%s\n' "${C_RESET}${C_GREEN}" "$left_space" "$text" "$right_space"
+    printf '%b%s%b\n' "${C_BOLD}${C_BLUE}" "$line" "${C_RESET}"
 }
 
 # ui::indent (들여쓰기 블록)

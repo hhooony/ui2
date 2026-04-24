@@ -11,6 +11,13 @@ ui::ok "This is a success message. (ui::ok)"
 ui::warn "This is a warning message. (ui::warn)"
 ui::error "This is an error message. (ui::error)"
 
+ui::section "1.5. Plain Colored Messages"
+ui::info "Sometimes you need colored text without tags or prefixes:"
+ui::msgb "This is a plain blue message. (ui::msgb)"
+ui::msgc "This is a bold cyan message. (ui::msgc)"
+ui::msgb "Notice there are no [INFO] tags or ==> arrows here."
+ui::msgc "Perfect for multiline descriptions or highlighting details."
+
 ui::section "2. Fields & Items"
 ui::field "OS" "Ubuntu 22.04 LTS"
 ui::field "Kernel" "$(uname -r)"
